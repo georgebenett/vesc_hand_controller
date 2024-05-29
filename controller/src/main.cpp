@@ -53,7 +53,7 @@ esp_now_peer_info_t peerInfo;
 
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  Serial.print("\r\nLast Packet Send Status:\t");
+ //Serial.print("\r\nLast Packet Send Status:\t");
 
   if (status == 0){
     tft.fillCircle(210, 10, 5, ST77XX_GREEN);
@@ -129,10 +129,10 @@ void loop() {
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
 
   if (result == ESP_OK) {
-    Serial.println("Sent with success");
+    //Serial.println("Sent with success");
   }
   else {
-    Serial.println("Error sending the data");
+    //Serial.println("Error sending the data");
   }
 
 }
