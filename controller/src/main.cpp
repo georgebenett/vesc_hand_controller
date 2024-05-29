@@ -14,7 +14,9 @@
 #define TFT_RST         D6
 #define TFT_DC          D5
 
-#define TIMER_INTERVAL  10000
+#define VBAT_TIMER_INTERVAL 1000
+#define SOC_TIMER_INTERVAL  10000
+
 
 /*
 #define TFT_SCL      D8
@@ -65,9 +67,15 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 // create a timer with default settings
 auto timer = timer_create_default();
+auto timer2 = timer_create_default();
 
 bool timerCallBatteryCharge(void *) {
   printBatteryCharge();
+  return true; // repeat? true
+}
+
+bool timerCallBatteryVoltage(void *) {
+  printBatteryVoltage();
   return true; // repeat? true
 }
 
@@ -81,7 +89,8 @@ void setup(void) {
   tft.setTextSize(2);
 
   //set the timers
-  timer.every(TIMER_INTERVAL, timerCallBatteryCharge);
+  timer.every(SOC_TIMER_INTERVAL, timerCallBatteryCharge);
+  timer.every(VBAT_TIMER_INTERVAL, timerCallBatteryVoltage);
 
   // Initialize all readings to 0
   for (uint8_t i = 0; i < NUM_READINGS; i++) {
@@ -120,9 +129,10 @@ void setup(void) {
 
 void loop() {
   printAverageThrottle();
-  printBatteryVoltage();
+
 
   timer.tick(); /*This one calls the print battery charge function*/
+  timer2.tick(); /*This one calls the print battery voltage function*/
   myData.throttle = average_throttle;
 
   // Send message via ESP-NOW
