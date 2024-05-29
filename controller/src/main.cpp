@@ -56,14 +56,10 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print("\r\nLast Packet Send Status:\t");
 
   if (status == 0){
-    tft.setCursor(40, 180);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.print("CONNECTED");
+    tft.fillCircle(210, 10, 5, ST77XX_GREEN);
   }
   else{
-    tft.setCursor(40, 130);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.print("DISCONNECTED");
+    tft.fillCircle(210, 10, 5, ST77XX_RED);
   }
 }
 
