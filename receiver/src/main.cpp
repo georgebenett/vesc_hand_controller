@@ -2,7 +2,12 @@
 #include <SPI.h>
 #include <esp_now.h>
 #include <WiFi.h>
+#include <ESP32Servo.h>
 
+
+#define SERVO_PIN D1
+
+Servo myServo;
 
 //esp-now broadcast address
 uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0xBF, 0x5D, 0xD0};
@@ -44,6 +49,7 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
 void setup(void) {
   Serial.begin(115200);
+  myServo.attach(SERVO_PIN);
 
   WiFi.mode(WIFI_MODE_STA);
 
@@ -77,7 +83,11 @@ void loop() {
     // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
 
-  Serial.println(myData.throttle);
+  int new_throttle = map(myData.throttle, -255, 255, 0, 180);
+  myServo.write(new_throttle);
 
+  Serial.print(myData.throttle);
+  Serial.print("  ");
+  Serial.println(new_throttle);
 }
 
