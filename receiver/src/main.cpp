@@ -105,7 +105,7 @@ void loop() {
   int new_throttle = map(myData.throttle, -255, 255, 0, 180);
   myServo.write(new_throttle);
 
-  /** Call the function getVescValues() to acquire data from VESC */
+/*  //Call the function getVescValues() to acquire data from VESC
   if ( UART.getVescValues() ) {
 
     Serial.print(UART.data.rpm);
@@ -119,7 +119,7 @@ void loop() {
   else
   {
     Serial.println("Failed to get data!");
-  }
+  }*/
 
 }
 
