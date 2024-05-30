@@ -3,11 +3,20 @@
 #include <esp_now.h>
 #include <WiFi.h>
 #include <ESP32Servo.h>
+#include <VescUart.h>
+
 
 
 #define SERVO_PIN D1
+#define RX D7
+#define TX D6
 
 Servo myServo;
+
+/** Initiate VescUart class */
+VescUart UART;
+
+
 
 //esp-now broadcast address
 uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0xBF, 0x5D, 0xD0};
@@ -48,10 +57,20 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
 
 void setup(void) {
+
+    /** Setup Serial port to display data */
   Serial.begin(115200);
+
+  /** Setup UART port (Serial1 on Atmega32u4) */
+  Serial1.begin(115200, SERIAL_8N1, RX, TX);
+
+  /** Define which ports to use as UART */
+  UART.setSerialPort(&Serial1);
+
   myServo.attach(SERVO_PIN);
 
   WiFi.mode(WIFI_MODE_STA);
+
 
     // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
@@ -86,8 +105,21 @@ void loop() {
   int new_throttle = map(myData.throttle, -255, 255, 0, 180);
   myServo.write(new_throttle);
 
-  Serial.print(myData.throttle);
-  Serial.print("  ");
-  Serial.println(new_throttle);
+  /** Call the function getVescValues() to acquire data from VESC */
+  if ( UART.getVescValues() ) {
+
+    Serial.print(UART.data.rpm);
+    Serial.print(" ");
+    Serial.print(UART.data.inpVoltage);
+    Serial.print(" ");
+    Serial.println(UART.data.avgMotorCurrent);
+
+
+  }
+  else
+  {
+    Serial.println("Failed to get data!");
+  }
+
 }
 
