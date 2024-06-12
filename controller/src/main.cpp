@@ -1,28 +1,23 @@
 #include <Arduino.h>
 #include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
+#include <Adafruit_SSD1306.h> // Hardware-specific library for SSD1306
 #include <SPI.h>
 #include <esp_now.h>
 #include <WiFi.h>
-
+#include <Wire.h>
 
 #include "throttle.h"
 #include "battery.h"
 
+#define SCREEN_WIDTH    128
+#define SCREEN_HEIGHT   32
 
-#define TFT_CS          D4
-#define TFT_RST         D6
-#define TFT_DC          D5
+#define OLED_RESET      -1
 
 #define VBAT_TIMER_INTERVAL 1000
 #define SOC_TIMER_INTERVAL  10000
 
-
-/*
-#define TFT_SCL      D8
-#define TFT_SDA      D10 just info */
-
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 /*TO-DO: define int sizes*/
 int throttle_readings[NUM_READINGS];  // Array to store throttle readings
@@ -58,47 +53,42 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
  //Serial.print("\r\nLast Packet Send Status:\t");
 
   if (status == 0){
-    tft.fillCircle(210, 10, 5, ST77XX_GREEN);
+    //display.fillCircle(120, 0, 2, WHITE); //display connected
   }
   else{
-    tft.fillCircle(210, 10, 5, ST77XX_RED);
+    //display.fillCircle(120, 0, 2, BLACK); //display disconnected
   }
 }
 
 // create a timer with default settings
 auto timer = timer_create_default();
-auto timer2 = timer_create_default();
+
 
 bool timerCallBatteryCharge(void *) {
-  printBatteryCharge();
+  /*printBatteryCharge();*/
   return true; // repeat? true
 }
 
-bool timerCallBatteryVoltage(void *) {
-  printBatteryVoltage();
-  return true; // repeat? true
-}
+
 
 void setup(void) {
   Serial.begin(115200);
-  //set lcd properties
-  tft.init(240, 280);           // Init ST7789 280x240
-  tft.setRotation(0);
-  tft.fillScreen(ST77XX_BLACK);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(2);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // initialize with the I2C addr 0x3C (for the 128x32)
+  display.clearDisplay();
+  display.setRotation(2); //invert the display in 180 degrees
 
   //set the timers
   timer.every(SOC_TIMER_INTERVAL, timerCallBatteryCharge);
-  timer.every(VBAT_TIMER_INTERVAL, timerCallBatteryVoltage);
+
 
   // Initialize all readings to 0
   for (uint8_t i = 0; i < NUM_READINGS; i++) {
     throttle_readings[i] = 0;
   }
   // inicialize functions
-  printBatteryVoltage();
-  printBatteryCharge();
+
+  /*printBatteryCharge();*/
 
   WiFi.mode(WIFI_MODE_STA);
 
@@ -132,7 +122,6 @@ void loop() {
 
 
   timer.tick(); /*This one calls the print battery charge function*/
-  timer2.tick(); /*This one calls the print battery voltage function*/
   myData.throttle = average_throttle;
 
   // Send message via ESP-NOW
