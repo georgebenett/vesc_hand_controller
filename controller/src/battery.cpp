@@ -7,10 +7,11 @@
 #include <arduino-timer.h>
 
 
-void printBatteryVoltage() {
+/*void printBatteryVoltage() {
 
-  tft.setCursor(10, 40);
-  tft.print("batt voltage: ");
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
   // Read the battery voltage
   raw_battery_voltage = analogReadMilliVolts(BATTERY_PIN);
   battery_voltage = battery_coeficient * raw_battery_voltage;
@@ -24,21 +25,21 @@ void printBatteryVoltage() {
     tft.print(battery_voltage);
     old_battery_voltage = battery_voltage;
   }
-}
+}*/
 
-void printBatteryCharge() {
+/*void printBatteryCharge() {
 
-  /*TO-DO: implement a coulomb counter instead of this*/
+  /*TO-DO: implement a coulomb counter instead of this
   battery_charge = map(battery_voltage, BATTERY_CHARGE_MIN, BATTERY_CHARGE_MAX, 0, 100);
-
-  tft.setCursor(10, 60);
-  tft.print("battery soc: ");
-  tft.setCursor(180, 60);
-  tft.setTextColor(ST77XX_BLACK);
-  tft.print(old_battery_charge);
-  tft.setCursor(180, 60);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(battery_charge);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(120, 0);
+  display.setTextColor(BLACK);
+  display.print(old_battery_charge);
+  display.setCursor(120, 0);
+  display.setTextColor(WHITE);
+  display.print(battery_charge);
   old_battery_charge = battery_charge;
-  tft.print("%");
-}
+  display.print("%");
+  display.display();
+}*/

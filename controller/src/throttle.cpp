@@ -5,8 +5,7 @@
 
 void printAverageThrottle() {
 
-  tft.setCursor(10, 20);
-  tft.print("throttle: ");
+
   // Read the throttle value
   raw_throttle_value = analogRead(THROTTLE_PIN);
   current_throttle_value = map(raw_throttle_value, 0, 4095, -255, 255);
@@ -23,13 +22,15 @@ void printAverageThrottle() {
   average_throttle = total / NUM_READINGS;
 
   if (average_throttle != old_throttle) {
-    tft.setCursor(180, 20);
-    tft.setTextColor(ST77XX_BLACK);
-    tft.print(old_throttle);
-    tft.setCursor(180, 20);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.print(average_throttle);
+
+    display.setCursor(0, 0);
+    display.setTextColor(BLACK);
+    display.print(old_throttle);
+    display.setCursor(0, 0);
+    display.setTextColor(WHITE);
+    display.print(average_throttle);
     old_throttle = average_throttle;
+    display.display();
   }
 
 

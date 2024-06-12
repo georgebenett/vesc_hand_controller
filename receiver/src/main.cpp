@@ -99,7 +99,8 @@ void setup(void) {
 
 
 void loop() {
-    // Send message via ESP-NOW
+
+  // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
 
   int new_throttle = map(myData.throttle, -255, 255, 0, 180);

@@ -1,3 +1,4 @@
-adafruit/Adafruit ST7735 and ST7789 Library@^1.10.4
-contrem/arduino-timer@^3.0.1
+adafruit/Adafruit SSD1306@^2.5.10
 adafruit/Adafruit GFX Library@^1.11.9
+contrem/arduino-timer@^3.0.1
+adafruit/Adafruit ST7735 and ST7789 Library@^1.10.4
