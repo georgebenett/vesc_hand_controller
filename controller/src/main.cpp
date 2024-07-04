@@ -83,7 +83,7 @@ void setup(void) {
   Serial.begin(115200);
   //set lcd properties
   tft.init(240, 280);           // Init ST7789 280x240
-  tft.setRotation(0);
+  tft.setRotation(2);           // Rotate screen 180 degrees
   tft.fillScreen(ST77XX_BLACK);
   tft.setTextColor(ST77XX_WHITE);
   tft.setTextSize(2);
