@@ -8,6 +8,9 @@
 #define BATTERY_PIN   D1
 #define BAT_NUM_READINGS  40  // Number of readings to average
 
+#define VBAT_TIMER_INTERVAL 1000
+#define SOC_TIMER_INTERVAL  10000
+
 #define battery_coeficient 2.05
 #define BATTERY_CHARGE_MIN 3500
 #define BATTERY_CHARGE_MAX 4200

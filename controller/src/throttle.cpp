@@ -1,7 +1,16 @@
 #include "throttle.h"
 #include <Arduino.h>
 #include "battery.h"
+#include "display.h"
 
+/*TO-DO: define int sizes*/
+int throttle_readings[NUM_READINGS];  // Array to store throttle readings
+int read_index = 0;                   // Index of the current reading
+int total = 0;                        // Running total of the readings
+int average_throttle = 0;             // Average throttle value
+int raw_throttle_value = 0;           // Raw throttle value
+int old_throttle = 0;                 // Old throttle value
+int current_throttle_value = 0;       // Current throttle value
 
 void printAverageThrottle() {
 

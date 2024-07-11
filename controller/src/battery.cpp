@@ -4,7 +4,14 @@
 
 #include "battery.h"
 #include "throttle.h"
+#include "display.h"
 #include <arduino-timer.h>
+
+int raw_battery_voltage =  0;
+int battery_voltage = 0;
+int old_battery_voltage = 0;                  // Old battery voltage
+int battery_charge = 0;
+int old_battery_charge = 0;
 
 
 void printBatteryVoltage() {
