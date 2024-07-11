@@ -24,16 +24,30 @@ uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0xBF, 0x5D, 0xD0};
 // Define variables to store incoming readings
 int incomingThrottle;
 
+//Define variables to be sent
+int vescRPM;
+float vescVoltage;
+float vescCurrent;
+
+
 // Variable to store if sending data was successful
 String success;
 
 
-typedef struct struct_message {
+typedef struct struct_rx_message {
     int throttle;
 } struct_message;
 
-// Create a struct_message to hold incoming sensor readings
-struct_message myData;
+typedef struct struct_tx_message {
+    int rpm;
+    float voltage;
+    float current;
+} struct_tx_message;
+
+
+struct_rx_message myData;
+
+struct_tx_message outcomingVescData;
 
 esp_now_peer_info_t peerInfo;
 
@@ -42,9 +56,11 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   //Serial.print("Last Packet Send Status: ");
   //Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
   if (status ==0){
+    //connected to the controller, should accept incoming throttle
     myData.throttle = incomingThrottle;
   }
   else{
+    //not connected to the controller, safety stop
     myData.throttle = 0;
   }
 }
@@ -94,32 +110,22 @@ void setup(void) {
   }
 
   // Register for a callback function that will be called when data is received
-  esp_now_register_recv_cb(OnDataRecv);
+  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 }
 
 
 void loop() {
-    // Send message via ESP-NOW
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
 
-  int new_throttle = map(myData.throttle, -255, 255, 0, 180);
-  myServo.write(new_throttle);
+  UART.getVescValues();
+  outcomingVescData.rpm = UART.data.rpm;
+  outcomingVescData.voltage = UART.data.inpVoltage;
+  outcomingVescData.current = UART.data.avgInputCurrent;
 
-  /** Call the function getVescValues() to acquire data from VESC */
-  if ( UART.getVescValues() ) {
+  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &outcomingVescData, sizeof(outcomingVescData));
 
-    Serial.print(UART.data.rpm);
-    Serial.print(" ");
-    Serial.print(UART.data.inpVoltage);
-    Serial.print(" ");
-    Serial.println(UART.data.avgMotorCurrent);
+  Serial.println(myData.throttle);
+  myServo.write(myData.throttle);
 
-
-  }
-  else
-  {
-    Serial.println("Failed to get data!");
-  }
 
 }
 

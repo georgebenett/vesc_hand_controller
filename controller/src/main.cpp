@@ -45,11 +45,28 @@ uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0x36, 0x41, 0xD8};
 // Variable to store if sending data was successful
 String success;
 
-typedef struct struct_message {
-    int throttle;
-} struct_message;
+// Create a struct_message to hold incoming sensor readings
 
-struct_message myData;
+// Define variables to store incoming readings
+int incomingRPM;
+float incomingVoltage;
+float incomingCurrent;
+
+
+typedef struct struct_tx_message {
+    int throttle;
+} struct_tx_message;
+
+typedef struct struct_rx_message {
+    int vescRpm;
+    float vescVoltage;
+    float vescCurrent;
+} struct_rx_message;
+
+struct_tx_message myData;
+
+struct_rx_message incomingVesc;
+
 
 esp_now_peer_info_t peerInfo;
 
@@ -58,11 +75,20 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
  //Serial.print("\r\nLast Packet Send Status:\t");
 
   if (status == 0){
+    //connected to the receiver
     tft.fillCircle(210, 10, 5, ST77XX_GREEN);
   }
   else{
+    //not connected to the receiver
     tft.fillCircle(210, 10, 5, ST77XX_RED);
   }
+}
+
+void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+  memcpy(&incomingVesc, incomingData, sizeof(incomingVesc));
+  incomingRPM = incomingVesc.vescRpm;
+  incomingVoltage = incomingVesc.vescVoltage;
+  incomingCurrent = incomingVesc.vescCurrent;
 }
 
 // create a timer with default settings
@@ -123,7 +149,8 @@ void setup(void) {
     return;
   }
 
-
+  // Register for a callback function that will be called when data is received
+  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 }
 
 
@@ -144,6 +171,11 @@ void loop() {
   else {
     //Serial.println("Error sending the data");
   }
+  Serial.print(incomingRPM);
+  Serial.print(" ");
+  Serial.print(incomingVoltage);
+  Serial.print(" ");
+  Serial.println(incomingCurrent);
 
 }
 
