@@ -132,6 +132,7 @@ void setup(void) {
 void loop() {
   printAverageThrottle();
   printSpeed(incomingRPM);
+  printVescVoltage(incomingVoltage);
 
   timer.tick(); /*This one calls the print battery charge function*/
   timer2.tick(); /*This one calls the print battery voltage function*/

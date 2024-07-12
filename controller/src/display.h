@@ -20,8 +20,7 @@ extern float incomingVoltage;
 extern float incomingCurrent;
 
 void printSpeed(int erpm);
-
-
+void printVescVoltage(float voltage);
 
 
 #endif  // DISPLAY_H
