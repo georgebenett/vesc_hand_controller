@@ -100,6 +100,7 @@ void setup(void) {
   printBatteryVoltage();
   printBatteryCharge();
 
+
   WiFi.mode(WIFI_MODE_STA);
 
     // Init ESP-NOW
@@ -130,7 +131,7 @@ void setup(void) {
 
 void loop() {
   printAverageThrottle();
-
+  printSpeed(incomingRPM);
 
   timer.tick(); /*This one calls the print battery charge function*/
   timer2.tick(); /*This one calls the print battery voltage function*/
@@ -145,11 +146,13 @@ void loop() {
   else {
     //Serial.println("Error sending the data");
   }
-  Serial.print(incomingRPM);
-  Serial.print(" ");
+
+  /*Serial.println(incomingRPM);
+   Serial.print(" ");
   Serial.print(incomingVoltage);
   Serial.print(" ");
   Serial.println(incomingCurrent);
+*/
 
 }
 

@@ -15,8 +15,11 @@
 #define TFT_RST         D6
 #define TFT_DC          D5
 
+extern int incomingRPM;
+extern float incomingVoltage;
+extern float incomingCurrent;
 
-
+void printSpeed(int erpm);
 
 
 

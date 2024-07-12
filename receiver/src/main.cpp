@@ -60,8 +60,8 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
     myData.throttle = incomingThrottle;
   }
   else{
-    //not connected to the controller, safety stop
-    myData.throttle = 0;
+    //not connected to the controller, safety stop (86 is the neutral value)
+    myData.throttle = 86;
   }
 }
 
