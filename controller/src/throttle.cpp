@@ -32,7 +32,6 @@ void printAverageThrottle() {
   // Calculate the average
   average_throttle = total / NUM_READINGS;
 
-  if (average_throttle != old_throttle) {
     tft.setCursor(180, 20);
     tft.setTextColor(ST77XX_BLACK);
     tft.print(old_throttle);
@@ -40,7 +39,4 @@ void printAverageThrottle() {
     tft.setTextColor(ST77XX_WHITE);
     tft.print(average_throttle);
     old_throttle = average_throttle;
-  }
-
-
 }
