@@ -146,15 +146,5 @@ void loop() {
     //Serial.println("Error sending the data");
   }
 
-  Serial.print(raw_throttle_value);
-  Serial.print(" ");
-  Serial.println(current_throttle_value);
-  /*Serial.println(incomingRPM);
-   Serial.print(" ");
-  Serial.print(incomingVoltage);
-  Serial.print(" ");
-  Serial.println(incomingCurrent);
-*/
-
 }
 
