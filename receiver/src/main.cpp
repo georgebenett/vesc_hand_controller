@@ -5,8 +5,21 @@
 #include <ESP32Servo.h>
 #include <VescUart.h>
 
-
-
+/*
+ *  Available ESP32 RF power parameters:
+    WIFI_POWER_19_5dBm    // 19.5dBm (For 19.5dBm of output, highest. Supply current ~150mA)
+    WIFI_POWER_19dBm      // 19dBm
+    WIFI_POWER_18_5dBm    // 18.5dBm
+    WIFI_POWER_17dBm      // 17dBm
+    WIFI_POWER_15dBm      // 15dBm
+    WIFI_POWER_13dBm      // 13dBm
+    WIFI_POWER_11dBm      // 11dBm
+    WIFI_POWER_8_5dBm     //  8dBm
+    WIFI_POWER_7dBm       //  7dBm
+    WIFI_POWER_5dBm       //  5dBm
+    WIFI_POWER_2dBm       //  2dBm
+    WIFI_POWER_MINUS_1dBm // -1dBm( For -1dBm of output, lowest. Supply current ~120mA)
+*/
 #define SERVO_PIN D1
 #define RX D7
 #define TX D6
@@ -86,6 +99,7 @@ void setup(void) {
   myServo.attach(SERVO_PIN);
 
   WiFi.mode(WIFI_MODE_STA);
+  WiFi.setTxPower(WIFI_POWER_19_5dBm); // Set WiFi RF power output to lowest level
 
 
     // Init ESP-NOW
