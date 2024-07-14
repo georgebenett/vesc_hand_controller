@@ -22,6 +22,12 @@ void printBatteryVoltage() {
   raw_battery_voltage = analogReadMilliVolts(BATTERY_PIN);
   battery_voltage = battery_coeficient * raw_battery_voltage;
 
+  if (battery_voltage < 0) {
+    battery_voltage = 0;
+  }
+  if (battery_voltage > 4200) {
+    battery_voltage = 4200;
+  }
   tft.setCursor(180, 40);
   tft.setTextColor(ST77XX_BLACK);
   tft.print(old_battery_voltage);

@@ -18,7 +18,14 @@ void printAverageThrottle() {
   tft.print("throttle: ");
   // Read the throttle value
   raw_throttle_value = analogRead(THROTTLE_PIN);
-  current_throttle_value = map(raw_throttle_value, 3800, 1100, 0, 180);
+  current_throttle_value = map(raw_throttle_value, 3750, 1130, 0, 255);
+
+  if (current_throttle_value < 0) {
+    current_throttle_value = 0;
+  }
+  if (current_throttle_value > 255) {
+    current_throttle_value = 255;
+  }
 
 
   // Update the running total and readings array

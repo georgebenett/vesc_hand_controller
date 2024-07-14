@@ -5,7 +5,7 @@
 #include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
 
 #define THROTTLE_PIN  D0
-#define NUM_READINGS  20  // Number of readings to average
+#define NUM_READINGS  15  // Number of readings to average
 
 
 extern Adafruit_ST7789 tft;

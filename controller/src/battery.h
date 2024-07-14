@@ -12,7 +12,7 @@
 #define SOC_TIMER_INTERVAL  10000
 
 #define battery_coeficient 2.05
-#define BATTERY_CHARGE_MIN 3500
+#define BATTERY_CHARGE_MIN 3200
 #define BATTERY_CHARGE_MAX 4200
 
 extern Adafruit_ST7789 tft;

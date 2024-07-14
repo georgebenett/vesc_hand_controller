@@ -10,23 +10,6 @@
 #include "battery.h"
 #include "display.h"
 
-
-/*
- *  Available ESP32 RF power parameters:
-    WIFI_POWER_19_5dBm    // 19.5dBm (For 19.5dBm of output, highest. Supply current ~150mA)
-    WIFI_POWER_19dBm      // 19dBm
-    WIFI_POWER_18_5dBm    // 18.5dBm
-    WIFI_POWER_17dBm      // 17dBm
-    WIFI_POWER_15dBm      // 15dBm
-    WIFI_POWER_13dBm      // 13dBm
-    WIFI_POWER_11dBm      // 11dBm
-    WIFI_POWER_8_5dBm     //  8dBm
-    WIFI_POWER_7dBm       //  7dBm
-    WIFI_POWER_5dBm       //  5dBm
-    WIFI_POWER_2dBm       //  2dBm
-    WIFI_POWER_MINUS_1dBm // -1dBm( For -1dBm of output, lowest. Supply current ~120mA)
-*/
-
 //esp-now broadcast address
 uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0x36, 0x41, 0xD8};
 
@@ -116,7 +99,7 @@ void setup(void) {
 
 
   WiFi.mode(WIFI_MODE_STA);
-  WiFi.setTxPower(WIFI_POWER_11dBm); // Select WiFi RF power
+  WiFi.setTxPower(WIFI_POWER_MINUS_1dBm); // Select WiFi RF power
 
     // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
@@ -163,6 +146,9 @@ void loop() {
     //Serial.println("Error sending the data");
   }
 
+  Serial.print(raw_throttle_value);
+  Serial.print(" ");
+  Serial.println(current_throttle_value);
   /*Serial.println(incomingRPM);
    Serial.print(" ");
   Serial.print(incomingVoltage);
