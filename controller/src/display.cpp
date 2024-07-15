@@ -29,7 +29,7 @@ void printSpeed(int erpm) {
 }
 
 void printVescVoltage(float voltage) {
-    float adjustedVoltage = incomingVoltage * 1.25;
+    float adjustedVoltage = incomingVoltage;
     tft.setCursor(10, 100);
     tft.print("vesc input: ");
     tft.setCursor(180, 100);

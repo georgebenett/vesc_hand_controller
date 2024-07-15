@@ -10,8 +10,11 @@
 #include "battery.h"
 #include "display.h"
 
-//esp-now broadcast address
-uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0x36, 0x41, 0xD8};
+//esp-now broadcast address xiao esp32-c3
+//uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0x36, 0x41, 0xD8};
+
+//esp8266mod broadcast address
+uint8_t broadcastAddress[] = {0xEC, 0xFA, 0xBC, 0x0E, 0x32, 0xF0};
 
 // Variable to store if sending data was successful
 String success;

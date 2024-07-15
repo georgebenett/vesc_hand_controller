@@ -1,16 +1,8 @@
 #include <Arduino.h>
-#include <SPI.h>
-#include <esp_now.h>
-#include <WiFi.h>
-#include <ESP32Servo.h>
-#include <VescUart.h>
-
-
-#define SERVO_PIN D1
-#define RX D7
-#define TX D6
-
-Servo myServo;
+#include "VescUart.h"
+#include "ESP8266WiFi.h"
+#include "espnow.h"
+#include "HardwareSerial.h"
 
 /** Initiate VescUart class */
 VescUart UART;
@@ -49,13 +41,12 @@ struct_rx_message myData;
 
 struct_tx_message outcomingVescData;
 
-esp_now_peer_info_t peerInfo;
 
 // Callback when data is sent
-void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
   //Serial.print("Last Packet Send Status: ");
   //Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
-  if (status ==0){
+  if (sendStatus ==0){
     //connected to the controller, should accept incoming throttle
     myData.throttle = incomingThrottle;
   }
@@ -66,7 +57,7 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 }
 
 // Callback when data is received
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
   memcpy(&myData, incomingData, sizeof(myData));
   incomingThrottle = myData.throttle;
 }
@@ -75,43 +66,31 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 void setup(void) {
 
     /** Setup Serial port to display data */
+
   Serial.begin(115200);
 
-  /** Setup UART port (Serial1 on Atmega32u4) */
-  Serial1.begin(115200, SERIAL_8N1, RX, TX);
+  UART.setSerialPort(&Serial);
 
-  /** Define which ports to use as UART */
-  UART.setSerialPort(&Serial1);
-
-  myServo.attach(SERVO_PIN);
-
-  WiFi.mode(WIFI_MODE_STA);
-  WiFi.setTxPower(WIFI_POWER_19_5dBm); // Set WiFi RF power output to lowest level
-
-
-    // Init ESP-NOW
-  if (esp_now_init() != ESP_OK) {
+  WiFi.mode(WIFI_STA);
+  // Init ESP-NOW
+  if (esp_now_init() != 0) {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
 
-    // Once ESPNow is Init, we will register for Send CB to
+  // Set ESP-NOW Role
+  esp_now_set_self_role(ESP_NOW_ROLE_COMBO);
+
+  // Once ESPNow is successfully Init, we will register for Send CB to
   // get the status of Trasnmitted packet
   esp_now_register_send_cb(OnDataSent);
 
   // Register peer
-  memcpy(peerInfo.peer_addr, broadcastAddress, 6);
-  peerInfo.channel = 0;
-  peerInfo.encrypt = false;
-
-  // Add peer
-  if (esp_now_add_peer(&peerInfo) != ESP_OK){
-    Serial.println("Failed to add peer");
-    return;
-  }
+  esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_COMBO, 1, NULL, 0);
 
   // Register for a callback function that will be called when data is received
-  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
+  esp_now_register_recv_cb(OnDataRecv);
+
 }
 
 
@@ -122,13 +101,13 @@ void loop() {
   outcomingVescData.voltage = UART.data.inpVoltage;
   outcomingVescData.current = UART.data.avgInputCurrent;
 
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &outcomingVescData, sizeof(outcomingVescData));
+  esp_now_send(broadcastAddress, (uint8_t *) &outcomingVescData, sizeof(outcomingVescData));
 
 
   UART.nunchuck.valueY = myData.throttle;
 
   UART.setNunchuckValues();
-  //myServo.write(myData.throttle);
+
 
 
 }
