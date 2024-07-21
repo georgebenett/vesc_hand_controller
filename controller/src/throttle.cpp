@@ -3,6 +3,14 @@
 #include "battery.h"
 #include "display.h"
 
+#define MAX_THROTTLE 255
+#define MIN_THROTTLE 0
+
+int raw_throttle_min = 4095;
+int raw_throttle_max = 0;
+
+
+
 /*TO-DO: define int sizes*/
 int throttle_readings[NUM_READINGS];  // Array to store throttle readings
 int read_index = 0;                   // Index of the current reading
@@ -18,14 +26,15 @@ void printAverageThrottle() {
   tft.print("throttle: ");
   // Read the throttle value
   raw_throttle_value = analogRead(THROTTLE_PIN);
-  current_throttle_value = map(raw_throttle_value, 3840, 1130, 255, 0);
 
-  if (current_throttle_value < 0) {
-    current_throttle_value = 0;
+  if (raw_throttle_value < raw_throttle_min) {
+    raw_throttle_min = raw_throttle_value;
   }
-  if (current_throttle_value > 255) {
-    current_throttle_value = 255;
+  if (raw_throttle_value > raw_throttle_max) {
+    raw_throttle_max = raw_throttle_value;
   }
+
+  current_throttle_value = map(raw_throttle_value, raw_throttle_max, raw_throttle_min, MAX_THROTTLE, MIN_THROTTLE);
 
 
   // Update the running total and readings array
@@ -37,7 +46,8 @@ void printAverageThrottle() {
   read_index = (read_index + 1) % NUM_READINGS;
 
   // Calculate the average
-  average_throttle = total / NUM_READINGS;
+  average_throttle = (total / NUM_READINGS) ;
+
 
     tft.setCursor(180, 20);
     tft.setTextColor(ST77XX_BLACK);
@@ -46,4 +56,6 @@ void printAverageThrottle() {
     tft.setTextColor(ST77XX_WHITE);
     tft.print(average_throttle);
     old_throttle = average_throttle;
+
+
 }

@@ -14,11 +14,9 @@ int battery_charge = 0;
 int old_battery_charge = 0;
 
 
-void printBatteryVoltage() {
+int getBatteryVoltage() {
 
-  tft.setCursor(10, 40);
-  tft.print("batt voltage: ");
-  // Read the battery voltage
+
   raw_battery_voltage = analogReadMilliVolts(BATTERY_PIN);
   battery_voltage = battery_coeficient * raw_battery_voltage;
 
@@ -28,19 +26,14 @@ void printBatteryVoltage() {
   if (battery_voltage > 4200) {
     battery_voltage = 4200;
   }
-  tft.setCursor(180, 40);
-  tft.setTextColor(ST77XX_BLACK);
-  tft.print(old_battery_voltage);
-  tft.setCursor(180, 40);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(battery_voltage);
-  old_battery_voltage = battery_voltage;
+  return battery_voltage;
 
 }
 
 void printBatteryCharge() {
 
   /*TO-DO: implement a coulomb counter instead of this*/
+  getBatteryVoltage();
   battery_charge = map(battery_voltage, BATTERY_CHARGE_MIN, BATTERY_CHARGE_MAX, 0, 100);
 
   tft.setCursor(10, 60);

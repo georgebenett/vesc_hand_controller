@@ -8,8 +8,7 @@
 #define BATTERY_PIN   D1
 #define BAT_NUM_READINGS  40  // Number of readings to average
 
-#define VBAT_TIMER_INTERVAL 1000
-#define SOC_TIMER_INTERVAL  10000
+#define SOC_TIMER_INTERVAL  1000
 
 #define battery_coeficient 2.05
 #define BATTERY_CHARGE_MIN 3200
@@ -23,7 +22,7 @@ extern int old_battery_voltage;
 extern int battery_charge;
 extern int old_battery_charge;
 
-void printBatteryVoltage();
+int getBatteryVoltage();
 void printBatteryCharge();
 
 #endif // BATTERY_H

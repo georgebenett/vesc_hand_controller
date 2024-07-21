@@ -74,10 +74,6 @@ bool timerCallBatteryCharge(void *) {
   return true; // repeat? true
 }
 
-bool timerCallBatteryVoltage(void *) {
-  printBatteryVoltage();
-  return true; // repeat? true
-}
 
 void setup(void) {
   Serial.begin(115200);
@@ -90,19 +86,17 @@ void setup(void) {
 
   //set the timers
   timer.every(SOC_TIMER_INTERVAL, timerCallBatteryCharge);
-  timer.every(VBAT_TIMER_INTERVAL, timerCallBatteryVoltage);
 
   // Initialize all readings to 0
   for (uint8_t i = 0; i < NUM_READINGS; i++) {
     throttle_readings[i] = 0;
   }
   // inicialize functions
-  printBatteryVoltage();
   printBatteryCharge();
 
 
   WiFi.mode(WIFI_MODE_STA);
-  WiFi.setTxPower(WIFI_POWER_5dBm); // avg consumption 182mA at 5dBm
+  WiFi.setTxPower(WIFI_POWER_11dBm); // avg consumption 182mA at 5dBm
 
     // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
@@ -148,5 +142,6 @@ void loop() {
   else {
     //Serial.println("Error sending the data");
   }
+
 }
 

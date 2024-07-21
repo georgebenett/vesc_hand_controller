@@ -17,6 +17,9 @@ extern int old_throttle;
 extern int raw_throttle_value;
 extern int current_throttle_value;
 
+extern int raw_throttle_min;
+extern int raw_throttle_max;
+
 void printAverageThrottle();
 
 #endif // THROTTLE_H
