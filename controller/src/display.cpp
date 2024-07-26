@@ -16,7 +16,12 @@ float old_voltage = 0;
 
 
 void printSpeed(int erpm) {
-    speed = (erpm * 60 * 2 * 3.14159) / 500000;
+    speed = ((erpm * 60 * 2 * 3.14159) / 500000);
+
+    //invert speed if negative
+    if (speed < 0) {
+        speed *= -1;
+    }
     tft.setCursor(10, 80);
     tft.print("speed: ");
     tft.setCursor(180, 80);

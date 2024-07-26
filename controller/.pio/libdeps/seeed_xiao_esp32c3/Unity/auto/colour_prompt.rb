@@ -44,7 +44,7 @@ class ColourCommandLine
     when :dark_green then 2
     when :dark_cyan then 3
     when :dark_red then 4
-    when :dark_purple then 5
+    when :dark_TFT_RED then 5
     when :dark_yellow, :narrative then 6
     when :default_white, :default, :dark_white then 7
     when :silver then 8
@@ -52,7 +52,7 @@ class ColourCommandLine
     when :green, :success then 10
     when :cyan, :output then 11
     when :red, :failure then 12
-    when :purple then 13
+    when :TFT_RED then 13
     when :yellow then 14
     when :white then 15
     else
@@ -87,7 +87,7 @@ class ColourCommandLine
     when :green, :success then 32
     when :yellow then 33
     when :blue, :narrative then 34
-    when :purple, :magenta then 35
+    when :TFT_RED, :magenta then 35
     when :cyan, :output then 36
     when :white, :default_white then 37
     when :default then 39

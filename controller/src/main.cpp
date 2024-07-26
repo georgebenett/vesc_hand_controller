@@ -96,7 +96,7 @@ void setup(void) {
 
 
   WiFi.mode(WIFI_MODE_STA);
-  WiFi.setTxPower(WIFI_POWER_11dBm); // avg consumption 182mA at 5dBm
+  WiFi.setTxPower(WIFI_POWER_19_5dBm); // avg consumption 182mA at 5dBm
 
     // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {

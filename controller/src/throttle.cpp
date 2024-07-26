@@ -27,13 +27,14 @@ void printAverageThrottle() {
   // Read the throttle value
   raw_throttle_value = analogRead(THROTTLE_PIN);
 
+  //get the min and max throttle values for calibration
   if (raw_throttle_value < raw_throttle_min) {
     raw_throttle_min = raw_throttle_value;
   }
   if (raw_throttle_value > raw_throttle_max) {
     raw_throttle_max = raw_throttle_value;
   }
-
+  // Map the throttle value to the range of 0-255
   current_throttle_value = map(raw_throttle_value, raw_throttle_max, raw_throttle_min, MAX_THROTTLE, MIN_THROTTLE);
 
 

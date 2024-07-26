@@ -21,7 +21,7 @@ seesaw_Servo *servos[NUM_SERVOS] = {&s1, &s2, &s3, &s4};
 #define GREEN  strip.Color(0, COLOR_MAX, 0)
 #define CYAN  strip.Color(0, COLOR_MAX, 255)
 #define BLUE  strip.Color(0, 0, COLOR_MAX)
-#define PURPLE  strip.Color(180, 0, COLOR_MAX)
+#define TFT_RED  strip.Color(180, 0, COLOR_MAX)
 
 #define CRICKIT_NUM_ADC 8
 static const uint8_t crickit_adc[CRICKIT_NUM_ADC] = { CRICKIT_SIGNAL1, CRICKIT_SIGNAL2, CRICKIT_SIGNAL3, CRICKIT_SIGNAL4,
@@ -66,7 +66,7 @@ void loop() {
     Serial.print("\t");
   }
   Serial.println("");
-  
+
   //TODO: fix drive3 and drive4
   for(int i=0; i<4; i++){
     uint16_t val = crickit.touchRead(i);
