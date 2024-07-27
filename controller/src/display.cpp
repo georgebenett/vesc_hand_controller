@@ -7,42 +7,47 @@
 #include "throttle.h"
 #include <arduino-timer.h>
 
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
+TFT_eSPI tft = TFT_eSPI();
+
 
 int current_rpm = 0;
 int old_rpm = 0;
 int speed = 0;
+int old_speed = 0;
 float old_voltage = 0;
+bool screenCleared = false;
 
 
-void printSpeed(int erpm) {
+void displayInit() {
+
+    tft.init();
+    tft.setRotation(0);
+    tft.fillScreen(TFT_BLACK);
+    tft.setTextDatum(4);
+}
+
+void getSpeed(int erpm) {
     speed = ((erpm * 60 * 2 * 3.14159) / 500000);
 
     //invert speed if negative
     if (speed < 0) {
         speed *= -1;
     }
-    tft.setCursor(10, 80);
-    tft.print("speed: ");
-    tft.setCursor(180, 80);
-    tft.setTextColor(ST77XX_BLACK);
-    tft.print(old_rpm);
-    tft.setCursor(180, 80);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.print(speed);
-    old_rpm = speed;
 }
 
-void printVescVoltage(float voltage) {
+void getVescVoltage(float voltage) {
     float adjustedVoltage = incomingVoltage;
-    tft.setCursor(10, 100);
-    tft.print("vesc input: ");
-    tft.setCursor(180, 100);
-    tft.setTextColor(ST77XX_BLACK);
-    tft.print(old_voltage);
-    tft.setCursor(180, 100);
-    tft.setTextColor(ST77XX_WHITE);
-    //print aproximate voltage, 1 decimal case
-    tft.print(adjustedVoltage, 1);
-    old_voltage = adjustedVoltage;
+
+}
+
+void displaySpeed() {
+
+  if (speed < 10 && !screenCleared) {
+    tft.fillScreen(TFT_BLACK);
+    screenCleared = true;
+  } else if (speed >= 10) {
+    screenCleared = false;
+  }
+
+  tft.drawString(String(speed), 120, 150, 8);
 }

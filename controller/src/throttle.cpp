@@ -1,5 +1,6 @@
-#include "throttle.h"
 #include <Arduino.h>
+
+#include "throttle.h"
 #include "battery.h"
 #include "display.h"
 
@@ -20,10 +21,9 @@ int raw_throttle_value = 0;           // Raw throttle value
 int old_throttle = 0;                 // Old throttle value
 int current_throttle_value = 0;       // Current throttle value
 
-void printAverageThrottle() {
+void getAverageThrottle() {
 
-  tft.setCursor(10, 20);
-  tft.print("throttle: ");
+
   // Read the throttle value
   raw_throttle_value = analogRead(THROTTLE_PIN);
 
@@ -48,15 +48,4 @@ void printAverageThrottle() {
 
   // Calculate the average
   average_throttle = (total / NUM_READINGS) ;
-
-
-    tft.setCursor(180, 20);
-    tft.setTextColor(ST77XX_BLACK);
-    tft.print(old_throttle);
-    tft.setCursor(180, 20);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.print(average_throttle);
-    old_throttle = average_throttle;
-
-
 }

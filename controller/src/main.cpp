@@ -1,7 +1,5 @@
 #include <Arduino.h>
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
-#include <SPI.h>
+#include <TFT_eSPI.h>
 #include <esp_now.h>
 #include <WiFi.h>
 
@@ -9,6 +7,9 @@
 #include "throttle.h"
 #include "battery.h"
 #include "display.h"
+
+extern TFT_eSPI tft;
+
 
 //esp-now broadcast address xiao esp32-c3
 //uint8_t broadcastAddress[] = {0xEC, 0xDA, 0x3B, 0x36, 0x41, 0xD8};
@@ -26,6 +27,7 @@ int incomingRPM;
 float incomingVoltage;
 float incomingCurrent;
 
+extern int speed;
 
 typedef struct struct_tx_message {
     int throttle;
@@ -50,11 +52,11 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
   if (status == 0){
     //connected to the receiver
-    tft.fillCircle(210, 10, 5, ST77XX_GREEN);
+    //tft.fillCircle(150, 150, 5, TFT_GREEN);
   }
   else{
     //not connected to the receiver
-    tft.fillCircle(210, 10, 5, ST77XX_RED);
+    //tft.fillCircle(150, 150, 5, TFT_RED);
   }
 }
 
@@ -67,10 +69,10 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
 // create a timer with default settings
 auto timer = timer_create_default();
-auto timer2 = timer_create_default();
+
 
 bool timerCallBatteryCharge(void *) {
-  printBatteryCharge();
+  getBatteryCharge();
   return true; // repeat? true
 }
 
@@ -78,11 +80,9 @@ bool timerCallBatteryCharge(void *) {
 void setup(void) {
   Serial.begin(115200);
   //set lcd properties
-  tft.init(240, 280);           // Init ST7789 280x240
-  tft.setRotation(2);           // Rotate screen 180 degrees
-  tft.fillScreen(ST77XX_BLACK);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(2);
+
+  displayInit();
+  tft.drawString("0",120,150, 8);
 
   //set the timers
   timer.every(SOC_TIMER_INTERVAL, timerCallBatteryCharge);
@@ -92,7 +92,7 @@ void setup(void) {
     throttle_readings[i] = 0;
   }
   // inicialize functions
-  printBatteryCharge();
+  getBatteryCharge();
 
 
   WiFi.mode(WIFI_MODE_STA);
@@ -125,23 +125,16 @@ void setup(void) {
 
 
 void loop() {
-  printAverageThrottle();
-  printSpeed(incomingRPM);
-  printVescVoltage(incomingVoltage);
-
-  timer.tick(); /*This one calls the print battery charge function*/
-  timer2.tick(); /*This one calls the print battery voltage function*/
+  getAverageThrottle();
+  getSpeed(incomingRPM);
+  getVescVoltage(incomingVoltage);
   myData.throttle = average_throttle;
 
   // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
 
-  if (result == ESP_OK) {
-    //Serial.println("Sent with success");
-  }
-  else {
-    //Serial.println("Error sending the data");
-  }
+
+  displaySpeed();
 
 }
 

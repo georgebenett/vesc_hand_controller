@@ -30,20 +30,11 @@ int getBatteryVoltage() {
 
 }
 
-void printBatteryCharge() {
+int getBatteryCharge() {
 
   /*TO-DO: implement a coulomb counter instead of this*/
   getBatteryVoltage();
   battery_charge = map(battery_voltage, BATTERY_CHARGE_MIN, BATTERY_CHARGE_MAX, 0, 100);
+  return battery_charge;
 
-  tft.setCursor(10, 60);
-  tft.print("battery soc: ");
-  tft.setCursor(180, 60);
-  tft.setTextColor(ST77XX_BLACK);
-  tft.print(old_battery_charge);
-  tft.setCursor(180, 60);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.print(battery_charge);
-  old_battery_charge = battery_charge;
-  tft.print("%");
-}
+ }

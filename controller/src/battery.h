@@ -1,8 +1,7 @@
 #ifndef BATTERY_H
 #define BATTERY_H
 
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
+
 #include <arduino-timer.h>
 
 #define BATTERY_PIN   D1
@@ -14,7 +13,6 @@
 #define BATTERY_CHARGE_MIN 3200
 #define BATTERY_CHARGE_MAX 4200
 
-extern Adafruit_ST7789 tft;
 
 extern int raw_battery_voltage;
 extern int battery_voltage;
@@ -23,6 +21,6 @@ extern int battery_charge;
 extern int old_battery_charge;
 
 int getBatteryVoltage();
-void printBatteryCharge();
+int getBatteryCharge();
 
 #endif // BATTERY_H
