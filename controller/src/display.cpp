@@ -70,5 +70,15 @@ void printSkateSoc() {
     tft.setTextColor(ST77XX_WHITE);
     tft.print(skateSoc);
     old_skate_soc = skateSoc;
+}
 
+void printTripDistance() {
+    tft.setCursor(10, 120);
+    tft.print("trip: ");
+    tft.setCursor(180, 120);
+    tft.setTextColor(ST77XX_BLACK);
+    tft.print("0");
+    tft.setCursor(180, 120);
+    tft.setTextColor(ST77XX_WHITE);
+    tft.print("0");
 }

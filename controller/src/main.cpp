@@ -132,6 +132,7 @@ void loop() {
   printSpeed(incomingRPM);
   printVescVoltage(incomingVoltage);
   printSkateSoc();
+  printTripDistance();
 
   timer.tick(); /*This one calls the print battery charge function*/
 
