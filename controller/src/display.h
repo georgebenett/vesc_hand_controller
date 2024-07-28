@@ -21,6 +21,7 @@ extern float incomingCurrent;
 
 void printSpeed(int erpm);
 void printVescVoltage(float voltage);
+void printSkateSoc();
 
 
 #endif  // DISPLAY_H

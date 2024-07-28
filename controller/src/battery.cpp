@@ -36,12 +36,12 @@ void printBatteryCharge() {
   getBatteryVoltage();
   battery_charge = map(battery_voltage, BATTERY_CHARGE_MIN, BATTERY_CHARGE_MAX, 0, 100);
 
-  tft.setCursor(10, 60);
+  tft.setCursor(10, 40);
   tft.print("battery soc: ");
-  tft.setCursor(180, 60);
+  tft.setCursor(180, 40);
   tft.setTextColor(ST77XX_BLACK);
   tft.print(old_battery_charge);
-  tft.setCursor(180, 60);
+  tft.setCursor(180, 40);
   tft.setTextColor(ST77XX_WHITE);
   tft.print(battery_charge);
   old_battery_charge = battery_charge;

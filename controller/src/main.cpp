@@ -26,6 +26,7 @@ int incomingRPM;
 float incomingVoltage;
 float incomingCurrent;
 
+bool connected = false;
 
 typedef struct struct_tx_message {
     int throttle;
@@ -51,10 +52,12 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   if (status == 0){
     //connected to the receiver
     tft.fillCircle(210, 10, 5, ST77XX_GREEN);
+    connected = true;
   }
   else{
     //not connected to the receiver
     tft.fillCircle(210, 10, 5, ST77XX_RED);
+    connected = false;
   }
 }
 
@@ -128,9 +131,10 @@ void loop() {
   printAverageThrottle();
   printSpeed(incomingRPM);
   printVescVoltage(incomingVoltage);
+  printSkateSoc();
 
   timer.tick(); /*This one calls the print battery charge function*/
-  timer2.tick(); /*This one calls the print battery voltage function*/
+
   myData.throttle = average_throttle;
 
   // Send message via ESP-NOW
