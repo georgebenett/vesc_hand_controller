@@ -147,6 +147,6 @@ void loop() {
   else {
     //Serial.println("Error sending the data");
   }
-
+  Serial.println(raw_throttle_value);
 }
 

@@ -6,8 +6,9 @@
 #define MAX_THROTTLE 255
 #define MIN_THROTTLE 0
 
-int raw_throttle_min = 4095;
-int raw_throttle_max = 0;
+//trim these values to match your throttle setup
+int raw_throttle_min = 1200;
+int raw_throttle_max = 3750;
 
 
 
@@ -27,14 +28,15 @@ void printAverageThrottle() {
   // Read the throttle value
   raw_throttle_value = analogRead(THROTTLE_PIN);
 
-  if (raw_throttle_value < raw_throttle_min) {
-    raw_throttle_min = raw_throttle_value;
-  }
-  if (raw_throttle_value > raw_throttle_max) {
-    raw_throttle_max = raw_throttle_value;
-  }
 
   current_throttle_value = map(raw_throttle_value, raw_throttle_max, raw_throttle_min, MAX_THROTTLE, MIN_THROTTLE);
+
+  if (current_throttle_value < 0) {
+    current_throttle_value = 0;
+  }
+  if (current_throttle_value > 255) {
+    current_throttle_value = 255;
+  }
 
 
   // Update the running total and readings array
