@@ -15,7 +15,6 @@
 
 //esp8266mod broadcast address
 uint8_t broadcastAddress[] = {0xEC, 0xFA, 0xBC, 0x0E, 0x32, 0xF0};
-
 // Variable to store if sending data was successful
 String success;
 
@@ -25,6 +24,8 @@ String success;
 int incomingRPM;
 float incomingVoltage;
 float incomingCurrent;
+
+int loopCount = 0;
 
 bool connected = false;
 
@@ -42,9 +43,7 @@ struct_tx_message myData;
 
 struct_rx_message incomingVesc;
 
-
 esp_now_peer_info_t peerInfo;
-
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
  //Serial.print("\r\nLast Packet Send Status:\t");
@@ -70,7 +69,7 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
 // create a timer with default settings
 auto timer = timer_create_default();
-auto timer2 = timer_create_default();
+
 
 bool timerCallBatteryCharge(void *) {
   printBatteryCharge();
@@ -128,6 +127,7 @@ void setup(void) {
 
 
 void loop() {
+  loopCount++;
   printAverageThrottle();
   printSpeed(incomingRPM);
   printVescVoltage(incomingVoltage);
@@ -138,15 +138,9 @@ void loop() {
 
   myData.throttle = average_throttle;
 
-  // Send message via ESP-NOW
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+  if(loopCount > 20){
+  esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+  loopCount = 50; //reset loopCount
+  }
 
-  if (result == ESP_OK) {
-    //Serial.println("Sent with success");
-  }
-  else {
-    //Serial.println("Error sending the data");
-  }
-  Serial.println(raw_throttle_value);
 }
-

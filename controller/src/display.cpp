@@ -57,7 +57,7 @@ void printVescVoltage(float voltage) {
 void printSkateSoc() {
 
     if (connected) {
-        skateSoc = map(incomingVoltage, 30, 42, 0, 100);
+        skateSoc = map(incomingVoltage, 31, 42, 0, 100);
     }
     else
     skateSoc = 0;
