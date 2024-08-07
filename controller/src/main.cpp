@@ -138,9 +138,9 @@ void loop() {
 
   myData.throttle = average_throttle;
 
-  if(loopCount > 20){
+  if(loopCount > 50){
   esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
-  loopCount = 50; //reset loopCount
+  loopCount = 51; //reset loopCount
   }
 
 }
